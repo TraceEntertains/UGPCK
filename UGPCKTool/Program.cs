@@ -21,7 +21,7 @@ public static class Program
             case "--extract":
             case "-e":
                 UGPCK? UGPCKFile = UGPCKExtractor.UGPCKExtract(args[1]);
-                UGPCKExtractor.UGPCKCreateFiles(UGPCKFile);
+                UGPCKExtractor.UGPCKCreateFiles(UGPCKFile, args[1]);
                 break;
             case "--create":
             case "-c":

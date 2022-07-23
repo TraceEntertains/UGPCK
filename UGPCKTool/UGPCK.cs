@@ -1,5 +1,4 @@
-﻿using ICSharpCode.SharpZipLib.GZip;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,7 +49,7 @@ namespace UGPCKTool
                         .Concat(Encoding.UTF8.GetBytes(Program.PCKSeparatorChar).ToArray()
                         .Concat(Encoding.UTF8.GetBytes(packFile.FileStreamSize.ToString()).ToArray()
                         .Concat(Encoding.UTF8.GetBytes(Program.PCKSeparatorChar).ToArray()
-                        .Concat(Encoding.UTF8.GetBytes(Convert.ToBase64String(byteData)))))))))).ToArray();
+                        .Concat(byteData)))))))).ToArray();
 
                     Console.WriteLine(Encoding.UTF8.GetBytes(Convert.ToBase64String(byteData)));
                 }
@@ -68,7 +67,7 @@ namespace UGPCKTool
                         .Concat(Encoding.UTF8.GetBytes(Program.PCKSeparatorChar).ToArray()
                         .Concat(Encoding.UTF8.GetBytes(packFile.FileStreamSize.ToString()).ToArray()
                         .Concat(Encoding.UTF8.GetBytes(Program.PCKSeparatorChar).ToArray()
-                        .Concat(Encoding.UTF8.GetBytes(Convert.ToBase64String(byteData))))))))))).ToArray();
+                        .Concat(byteData))))))))).ToArray();
                 }
             }
 

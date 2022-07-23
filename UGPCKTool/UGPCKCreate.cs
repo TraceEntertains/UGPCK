@@ -21,9 +21,8 @@ namespace UGPCKTool
 
                     byte[] fileBytes = File.ReadAllBytes(file);
 
-                    MemoryStream stream = new(fileBytes);
-                    StreamWriter streamWriter = new(stream);
-                    streamWriter.Write(fileBytes);
+                    MemoryStream stream = new(fileBytes.ToBase64Bytes().Length);
+                    stream.Write(fileBytes.ToBase64Bytes(), 0, fileBytes.ToBase64Bytes().Length);
 
                     var name = "";
                     
@@ -40,7 +39,7 @@ namespace UGPCKTool
                     {
                         NameSize = Encoding.UTF8.GetByteCount(name),
                         Name = name,
-                        FileStreamSize = Convert.ToBase64String(fileBytes).Length,
+                        FileStreamSize = fileBytes.ToBase64Bytes().Length,
                         FileStream = stream
                     };
 

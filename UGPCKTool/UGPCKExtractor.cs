@@ -12,8 +12,6 @@ namespace UGPCKTool
         {
             string? dirPath = Path.GetDirectoryName(Path.GetFullPath(path));
 
-            Directory.CreateDirectory(dirPath + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(path));
-
             byte[] pckBytes = File.ReadAllBytes(dirPath + Path.DirectorySeparatorChar + Path.GetFileName(path));
 
             MemoryStream memStream = new(pckBytes);
@@ -73,12 +71,10 @@ namespace UGPCKTool
                         lastReadSeparatorChar = false;
                         break;
                     case "FileStreamBytesLength":
-                        byte[] decodedData = Convert.FromBase64String(Encoding.UTF8.GetString(binaryReader.ReadBytes(pckFile.FileStreamSize)));
-                        MemoryStream fileStream = new(Encoding.UTF8.GetString(decodedData).Length);
+                        byte[] decodedData = binaryReader.ReadBytes(pckFile.FileStreamSize).FromBase64Bytes();
+                        MemoryStream fileStream = new(decodedData, 0, decodedData.Length);
                         StreamWriter fileStreamWriter = new(fileStream);
-                        fileStreamWriter.Write(Encoding.UTF8.GetString(decodedData));
                         fileStreamWriter.Flush();
-                        Console.WriteLine(Encoding.UTF8.GetString(decodedData));
                         pckFile.FileStream = fileStream;
                         UGPCKFile.Files.Add(pckFile);
                         pckFile = new();
@@ -149,19 +145,24 @@ namespace UGPCKTool
             return binReturn;
         }
 
-        public static void UGPCKCreateFiles(UGPCK UGPCK)
+        public static void UGPCKCreateFiles(UGPCK UGPCK, string path)
         {
+            string? dirPath = Path.GetDirectoryName(Path.GetFullPath(path));
+
             foreach (PackFile file in UGPCK.Files)
             {
                 if (!Directory.Exists(Path.GetDirectoryName(Environment.CurrentDirectory + $"\\{file.Name}")))
                 {
-                    Console.WriteLine(file.Name);
                     Directory.CreateDirectory(Path.GetDirectoryName(file.Name));
                 }
 
                 FileStream fileStream = File.Create(Environment.CurrentDirectory + "\\" + file.Name);
+                file.FileStream.Position = 0;
                 file.FileStream.CopyTo(fileStream);
+                fileStream.Flush();
                 fileStream.Close();
+
+                Console.WriteLine(file.Name);
             }
         }
     }
